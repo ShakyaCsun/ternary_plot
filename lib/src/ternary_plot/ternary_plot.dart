@@ -536,14 +536,19 @@ class RenderTernaryPlot<T> extends RenderBox
   void handleEvent(PointerEvent event, covariant BoxHitTestEntry entry) {
     assert(debugHandleEvent(event, entry), 'Support debugPaintPointersEnabled');
     final childMap = this.childMap;
-    final pointsAtOffset = _plotData.data.keys.where((point) {
-      final child = childMap[point]!;
-      final childParentData = child.parentData! as BoxParentData;
-      return child.hitTest(
-        BoxHitTestResult(),
-        position: entry.localPosition - childParentData.offset,
-      );
-    }).toList();
+    final pointsAtOffset = _plotData.data.keys
+        .where((point) {
+          final child = childMap[point]!;
+          final childParentData = child.parentData! as BoxParentData;
+          return child.hitTest(
+            BoxHitTestResult(),
+            position: entry.localPosition - childParentData.offset,
+          );
+        })
+        .toList()
+        // Points get hit in reverse paint order
+        .reversed
+        .toList();
     if (onPointTap != null && event is PointerDownEvent) {
       if (pointsAtOffset.isNotEmpty) {
         onPointTap!(pointsAtOffset);
