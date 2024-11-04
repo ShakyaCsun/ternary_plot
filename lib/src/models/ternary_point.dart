@@ -2,7 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ternary_plot/src/models/models.dart';
 
-class TernaryPoint extends Equatable {
+class TernaryPoint extends Equatable implements Comparable<TernaryPoint> {
   const TernaryPoint({
     required this.a,
     required this.b,
@@ -40,6 +40,19 @@ class TernaryPoint extends Equatable {
   Offset get cartesianPoint {
     final (x, y) = xyPoint;
     return Offset(x, 1 - y);
+  }
+
+  @override
+  int compareTo(TernaryPoint other) {
+    final (x, y) = xyPoint;
+    final (otherX, otherY) = other.xyPoint;
+    if (y != otherY) {
+      return otherY.compareTo(y);
+    }
+    if (x != otherX) {
+      return x.compareTo(y);
+    }
+    return 0;
   }
 
   @override
