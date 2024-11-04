@@ -192,6 +192,10 @@ class RenderTernaryPlot<T> extends RenderBox
     _onPointHovered?.call(_hoveredPoints.value);
   }
 
+  void _onTap() {
+    _onPointTap?.call(_hoveredPoints.value);
+  }
+
   void configureDefaultTextStyles(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     defaultLabelStyle = textTheme.headlineMedium;
@@ -263,6 +267,15 @@ class RenderTernaryPlot<T> extends RenderBox
     textDirection: textDirection,
     textAlign: TextAlign.center,
   );
+
+  late final TapGestureRecognizer _tapGestureRecognizer;
+
+  @override
+  void attach(PipelineOwner owner) {
+    super.attach(owner);
+    _tapGestureRecognizer = TapGestureRecognizer(debugOwner: this)
+      ..onTap = _onTap;
+  }
 
   @override
   void setupParentData(covariant RenderObject child) {
@@ -501,10 +514,10 @@ class RenderTernaryPlot<T> extends RenderBox
     }
   }
 
-  @override
-  bool hitTestSelf(Offset position) {
-    return true;
-  }
+  // @override
+  // bool hitTestSelf(Offset position) {
+  //   return false;
+  // }
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
@@ -550,9 +563,7 @@ class RenderTernaryPlot<T> extends RenderBox
         .reversed
         .toList();
     if (onPointTap != null && event is PointerDownEvent) {
-      if (pointsAtOffset.isNotEmpty) {
-        onPointTap!(pointsAtOffset);
-      }
+      _tapGestureRecognizer.addPointer(event);
     }
     if (onPointHovered != null && event is PointerHoverEvent) {
       _hoveredPoints.value = pointsAtOffset;
@@ -565,6 +576,7 @@ class RenderTernaryPlot<T> extends RenderBox
     _leftLabelPainter.dispose();
     _rightLabelPainter.dispose();
     _hoveredPoints.dispose();
+    _tapGestureRecognizer.dispose();
     super.dispose();
   }
 }
