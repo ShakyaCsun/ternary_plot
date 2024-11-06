@@ -27,7 +27,16 @@ class TernaryPlot<T> extends MultiChildRenderObjectWidget {
   final TernaryPlotData<T> plotData;
   final TernaryPlotSettings settings;
   final List<TernaryPlotArea>? areas;
+
+  /// Callback for Points that are tapped.
+  ///
+  /// This is guaranteed to contain a point [T] that was tapped unlike
+  /// [onPointHovered]
   final PointsHitCallback<T>? onPointTap;
+
+  /// Callback for Points that are hovered
+  ///
+  /// The [List<T>] can be empty to denote hover exit.
   final PointsHitCallback<T>? onPointHovered;
 
   /// Slightly Offset children sharing same [TernaryPoint].
@@ -514,10 +523,10 @@ class RenderTernaryPlot<T> extends RenderBox
     }
   }
 
-  // @override
-  // bool hitTestSelf(Offset position) {
-  //   return false;
-  // }
+  @override
+  bool hitTestSelf(Offset position) {
+    return size.contains(position);
+  }
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
@@ -562,7 +571,9 @@ class RenderTernaryPlot<T> extends RenderBox
         // Points get hit in reverse paint order
         .reversed
         .toList();
-    if (onPointTap != null && event is PointerDownEvent) {
+    if (onPointTap != null &&
+        pointsAtOffset.isNotEmpty &&
+        event is PointerDownEvent) {
       _tapGestureRecognizer.addPointer(event);
     }
     if (onPointHovered != null && event is PointerHoverEvent) {
