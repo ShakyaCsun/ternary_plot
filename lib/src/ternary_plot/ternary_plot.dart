@@ -95,15 +95,6 @@ class RenderTernaryPlot<T> extends RenderBox
     _hoveredPoints.addListener(_hoveredPointCallback);
   }
 
-  List<RenderBox> get children => getChildrenAsList();
-
-  Map<T, RenderBox> get childMap {
-    final children = this.children;
-    return {
-      for (final (i, datum) in _plotData.data.keys.indexed) datum: children[i],
-    };
-  }
-
   TernaryPlotData<T> get plotData => _plotData;
   TernaryPlotData<T> _plotData;
   set plotData(TernaryPlotData<T> value) {
@@ -321,13 +312,12 @@ class RenderTernaryPlot<T> extends RenderBox
     // Children are allowed to be as big as they want (= unconstrained).
     const childConstraints = BoxConstraints();
     _childrenSizes.clear();
-    final childMap = this.childMap;
 
+    var child = firstChild;
     for (final slot in _plotData.data.keys) {
-      final child = childMap[slot]!
-        ..layout(childConstraints, parentUsesSize: true);
+      child?.layout(childConstraints, parentUsesSize: true);
       _positionChild(
-        child,
+        child!,
         calculateChildPosition(
           point: _plotData.data[slot]!,
           childSize: child.size,
@@ -335,6 +325,7 @@ class RenderTernaryPlot<T> extends RenderBox
         ),
       );
       _childrenSizes[slot] = child.size;
+      child = (child.parentData as TernaryPlotParentData?)?.nextSibling;
     }
   }
 
@@ -530,47 +521,25 @@ class RenderTernaryPlot<T> extends RenderBox
 
   @override
   bool hitTestChildren(BoxHitTestResult result, {required Offset position}) {
-    // Test in reverse order so that hit tests at locations where
-    // children overlap hit the child that is visually "on top"
-    // (i.e., paints later)
-    var didHit = false;
-    for (final child in children.toList().reversed) {
-      final parentData = child.parentData! as BoxParentData;
-      final isHit = result.addWithPaintOffset(
-        offset: parentData.offset,
-        position: position,
-        hitTest: (BoxHitTestResult result, Offset transformed) {
-          assert(
-            transformed == position - parentData.offset,
-            'Hit Test transformation is correctly positioned',
-          );
-          return child.hitTest(result, position: transformed);
-        },
-      );
-      if (isHit) {
-        didHit = true;
-      }
-    }
-    return didHit;
+    return defaultHitTestChildren(result, position: position);
   }
 
   @override
   void handleEvent(PointerEvent event, covariant BoxHitTestEntry entry) {
     assert(debugHandleEvent(event, entry), 'Support debugPaintPointersEnabled');
-    final childMap = this.childMap;
-    final pointsAtOffset = _plotData.data.keys
-        .where((point) {
-          final child = childMap[point]!;
-          final childParentData = child.parentData! as BoxParentData;
-          return child.hitTest(
-            BoxHitTestResult(),
-            position: entry.localPosition - childParentData.offset,
-          );
-        })
-        .toList()
-        // Points get hit in reverse paint order
-        .reversed
-        .toList();
+    var child = lastChild;
+    final pointsAtOffset = <T>[];
+    for (final point in _plotData.data.keys.toList().reversed) {
+      final childParentData = child!.parentData! as TernaryPlotParentData;
+      final isHit = child.hitTest(
+        BoxHitTestResult(),
+        position: entry.localPosition - childParentData.offset,
+      );
+      if (isHit) {
+        pointsAtOffset.add(point);
+      }
+      child = childParentData.previousSibling;
+    }
     if (onPointTap != null &&
         pointsAtOffset.isNotEmpty &&
         event is PointerDownEvent) {
