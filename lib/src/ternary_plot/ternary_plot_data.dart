@@ -6,7 +6,7 @@ typedef DataToPoint<T> = Map<T, TernaryPoint>;
 typedef ChildBuilder<T> = Widget Function(T value);
 
 class TernaryPlotData<T> extends Equatable {
-  const TernaryPlotData({
+  TernaryPlotData({
     required this.data,
     required this.builder,
   });
@@ -14,16 +14,14 @@ class TernaryPlotData<T> extends Equatable {
   final DataToPoint<T> data;
   final ChildBuilder<T> builder;
 
-  List<Widget> get children {
-    return data.keys
-        .map(
-          (key) => KeyedSubtree(
-            key: ValueKey(key),
-            child: builder(key),
-          ),
-        )
-        .toList();
-  }
+  late final List<Widget> children = data.keys
+      .map(
+        (key) => KeyedSubtree(
+          key: ValueKey(key),
+          child: builder(key),
+        ),
+      )
+      .toList();
 
   @override
   List<Object> get props => [data, builder];
