@@ -192,8 +192,10 @@ class RenderTernaryPlot<T> extends RenderBox
     _onPointHovered?.call(_hoveredPoints.value);
   }
 
+  final ValueListNotifier<T> _tappedPoints = ValueListNotifier([]);
+
   void _onTap() {
-    _onPointTap?.call(_hoveredPoints.value);
+    _onPointTap?.call(_tappedPoints.value);
   }
 
   void configureDefaultTextStyles(BuildContext context) {
@@ -540,10 +542,11 @@ class RenderTernaryPlot<T> extends RenderBox
       }
       child = childParentData.previousSibling;
     }
-    if (onPointTap != null &&
-        pointsAtOffset.isNotEmpty &&
-        event is PointerDownEvent) {
-      _tapGestureRecognizer.addPointer(event);
+    if (onPointTap != null && event is PointerDownEvent) {
+      if (pointsAtOffset.isNotEmpty) {
+        _tappedPoints.value = pointsAtOffset;
+        _tapGestureRecognizer.addPointer(event);
+      }
     }
     if (onPointHovered != null && event is PointerHoverEvent) {
       _hoveredPoints.value = pointsAtOffset;
@@ -556,6 +559,7 @@ class RenderTernaryPlot<T> extends RenderBox
     _leftLabelPainter.dispose();
     _rightLabelPainter.dispose();
     _hoveredPoints.dispose();
+    _tappedPoints.dispose();
     _tapGestureRecognizer.dispose();
     super.dispose();
   }
