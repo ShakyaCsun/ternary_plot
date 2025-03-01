@@ -10,10 +10,10 @@ class TernaryPlotSettings extends Equatable {
     this.gridLines = 0,
     this.gridLineColor,
   }) : assert(
-          gridLines < 1 || gridLineColor != null || lineColor != null,
-          'If gridLines are greater than 0, then either lineColor or '
-          'gridLineColor should be provided to draw the lines',
-        );
+         gridLines < 1 || gridLineColor != null || lineColor != null,
+         'If gridLines are greater than 0, then either lineColor or '
+         'gridLineColor should be provided to draw the lines',
+       );
 
   /// If [ternaryLabels] are null, then no labels are shown.
   ///
@@ -41,13 +41,7 @@ class TernaryPlotSettings extends Equatable {
 
   @override
   List<Object?> get props {
-    return [
-      gridLines,
-      minPadding,
-      lineColor,
-      gridLineColor,
-      ternaryLabels,
-    ];
+    return [gridLines, minPadding, lineColor, gridLineColor, ternaryLabels];
   }
 }
 
@@ -68,9 +62,9 @@ class TernaryLabelData extends Equatable {
     required this.leftLabel,
     required this.rightLabel,
     TextStyle? style,
-  })  : topLabelStyle = style,
-        leftLabelStyle = style,
-        rightLabelStyle = style;
+  }) : topLabelStyle = style,
+       leftLabelStyle = style,
+       rightLabelStyle = style;
 
   /// Label for Top vertex of [TernaryPlot]. Corresponds to [TernaryPoint.c]
   final String topLabel;

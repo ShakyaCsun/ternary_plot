@@ -9,20 +9,10 @@ extension MapSwapKeyValueExtension<K, V> on Map<K, V> {
   /// print(foo.swapKV); // prints {'bar': [1, 3], 'baz': [2]}
   /// ```
   Map<V, List<K>> get swapKV {
-    return entries.fold(
-      <V, List<K>>{},
-      (result, entry) {
-        final MapEntry(:key, :value) = entry;
-        result.update(
-          value,
-          (value) => [
-            ...value,
-            key,
-          ],
-          ifAbsent: () => [key],
-        );
-        return result;
-      },
-    );
+    return entries.fold(<V, List<K>>{}, (result, entry) {
+      final MapEntry(:key, :value) = entry;
+      result.update(value, (value) => [...value, key], ifAbsent: () => [key]);
+      return result;
+    });
   }
 }

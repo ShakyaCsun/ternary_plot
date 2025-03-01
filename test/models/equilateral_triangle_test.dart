@@ -4,59 +4,41 @@ import 'package:ternary_plot/ternary_plot.dart';
 
 void main() {
   group('EquilateralTriangle', () {
-    group(
-      'calculates correct triangle size',
-      () {
-        test(
-          'when height is smaller',
-          () {
-            final triangle = EquilateralTriangle(
-              padding: 10,
-              availableSize: const Size(100, 60),
-            );
-            expect(
-              triangle.triangleSize,
-              equals(const Size(2 / sqrt_3 * 40, 40)),
-            );
-          },
+    group('calculates correct triangle size', () {
+      test('when height is smaller', () {
+        final triangle = EquilateralTriangle(
+          padding: 10,
+          availableSize: const Size(100, 60),
         );
-        test(
-          'when width is smaller',
-          () {
-            final triangle = EquilateralTriangle(
-              padding: 10,
-              availableSize: const Size(50, 100),
-            );
-            expect(
-              triangle.triangleSize,
-              equals(const Size(30, sqrt_3by2 * 30)),
-            );
-          },
+        expect(triangle.triangleSize, equals(const Size(2 / sqrt_3 * 40, 40)));
+      });
+      test('when width is smaller', () {
+        final triangle = EquilateralTriangle(
+          padding: 10,
+          availableSize: const Size(50, 100),
         );
-        test('when width and height fit perfectly', () {
-          const width = 30.0;
-          const height = sqrt_3by2 * width;
-          final triangle = EquilateralTriangle(
-            padding: 0,
-            availableSize: const Size(width, height),
-          );
-          expect(triangle.triangleSize, equals(const Size(width, height)));
-        });
-        test('when width and height fit perfectly with padding', () {
-          const width = 30.0;
-          const height = sqrt_3by2 * width;
-          const padding = 10.0;
-          final triangle = EquilateralTriangle(
-            padding: padding,
-            availableSize: const Size(
-              width + 2 * padding,
-              height + 2 * padding,
-            ),
-          );
-          expect(triangle.triangleSize, equals(const Size(width, height)));
-        });
-      },
-    );
+        expect(triangle.triangleSize, equals(const Size(30, sqrt_3by2 * 30)));
+      });
+      test('when width and height fit perfectly', () {
+        const width = 30.0;
+        const height = sqrt_3by2 * width;
+        final triangle = EquilateralTriangle(
+          padding: 0,
+          availableSize: const Size(width, height),
+        );
+        expect(triangle.triangleSize, equals(const Size(width, height)));
+      });
+      test('when width and height fit perfectly with padding', () {
+        const width = 30.0;
+        const height = sqrt_3by2 * width;
+        const padding = 10.0;
+        final triangle = EquilateralTriangle(
+          padding: padding,
+          availableSize: const Size(width + 2 * padding, height + 2 * padding),
+        );
+        expect(triangle.triangleSize, equals(const Size(width, height)));
+      });
+    });
     group('centers Triangle', () {
       const size = Size(1871, 1179);
       final triangle = EquilateralTriangle(

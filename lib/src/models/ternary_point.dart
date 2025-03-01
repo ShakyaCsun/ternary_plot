@@ -3,15 +3,12 @@ import 'package:flutter/widgets.dart';
 import 'package:ternary_plot/src/models/models.dart';
 
 class TernaryPoint extends Equatable implements Comparable<TernaryPoint> {
-  const TernaryPoint({
-    required this.a,
-    required this.b,
-    required this.c,
-  })  : assert(
-          a >= 0 && b >= 0 && c >= 0,
-          'All points in TernaryPoint must be positive',
-        ),
-        total = a + b + c;
+  const TernaryPoint({required this.a, required this.b, required this.c})
+    : assert(
+        a >= 0 && b >= 0 && c >= 0,
+        'All points in TernaryPoint must be positive',
+      ),
+      total = a + b + c;
 
   /// Bottom Left
   ///

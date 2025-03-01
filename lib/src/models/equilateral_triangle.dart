@@ -9,10 +9,7 @@ const sqrt_3 = 1.7320508075688772;
 const sqrt_3by2 = sqrt_3 / 2;
 
 class EquilateralTriangle extends Equatable {
-  EquilateralTriangle({
-    required this.padding,
-    required this.availableSize,
-  });
+  EquilateralTriangle({required this.padding, required this.availableSize});
 
   static final zero = EquilateralTriangle(padding: 0, availableSize: Size.zero);
   final double padding;

@@ -86,12 +86,12 @@ class RenderTernaryPlot<T> extends RenderBox
     PointsHitCallback<T>? onPointTap,
     PointsHitCallback<T>? onPointHovered,
     bool offsetChildren = true,
-  })  : _offsetChildren = offsetChildren,
-        _plotData = plotData,
-        _settings = settings,
-        _areas = areas,
-        _onPointTap = onPointTap,
-        _onPointHovered = onPointHovered {
+  }) : _offsetChildren = offsetChildren,
+       _plotData = plotData,
+       _settings = settings,
+       _areas = areas,
+       _onPointTap = onPointTap,
+       _onPointHovered = onPointHovered {
     _hoveredPoints.addListener(_hoveredPointCallback);
   }
 
@@ -381,9 +381,10 @@ class RenderTernaryPlot<T> extends RenderBox
       :ternaryLabels,
     ) = settings;
 
-    final canvas = context.canvas
-      ..save()
-      ..translate(offset.dx, offset.dy);
+    final canvas =
+        context.canvas
+          ..save()
+          ..translate(offset.dx, offset.dy);
 
     // Doesn't actually paint labels if size doesn't allow or
     // if there are no labels
@@ -395,7 +396,7 @@ class RenderTernaryPlot<T> extends RenderBox
         :color,
         :title,
         :titleStyle,
-        :titlePosition
+        :titlePosition,
       ) = area;
       final areaPaint = Paint()..color = color;
       final areaPath = triangle.getAreaPath(points: points);
@@ -403,17 +404,19 @@ class RenderTernaryPlot<T> extends RenderBox
 
       if (title != null) {
         final rect = areaPath.getBounds();
-        final offset = titlePosition != null
-            ? triangle.correctedPosition(point: titlePosition)
-            : Offset(
-                rect.left + rect.width / 2,
-                rect.top + rect.height / 2,
-              );
+        final offset =
+            titlePosition != null
+                ? triangle.correctedPosition(point: titlePosition)
+                : Offset(
+                  rect.left + rect.width / 2,
+                  rect.top + rect.height / 2,
+                );
 
         final textPainter = TextPainter(
           text: TextSpan(
             text: title,
-            style: titleStyle ??
+            style:
+                titleStyle ??
                 defaultAreaTitleStyle.copyWith(
                   color: _getColorForBrightness(
                     ThemeData.estimateBrightnessForColor(color),
@@ -432,10 +435,12 @@ class RenderTernaryPlot<T> extends RenderBox
     }
 
     if (gridLines > 0) {
-      final gridLinePaint = Paint()
-        ..color =
-            gridLineColor ?? (lineColor ?? Colors.white).withValues(alpha: 0.4)
-        ..style = PaintingStyle.stroke;
+      final gridLinePaint =
+          Paint()
+            ..color =
+                gridLineColor ??
+                (lineColor ?? Colors.white).withValues(alpha: 0.4)
+            ..style = PaintingStyle.stroke;
 
       for (var i = 0; i < gridLines; i++) {
         final one = i.toDouble();
@@ -455,10 +460,11 @@ class RenderTernaryPlot<T> extends RenderBox
     }
 
     if (lineColor != null) {
-      final linePaint = Paint()
-        ..color = lineColor
-        ..strokeWidth = 2
-        ..style = PaintingStyle.stroke;
+      final linePaint =
+          Paint()
+            ..color = lineColor
+            ..strokeWidth = 2
+            ..style = PaintingStyle.stroke;
       canvas.drawPath(triangle.path, linePaint);
     }
 
@@ -476,13 +482,12 @@ class RenderTernaryPlot<T> extends RenderBox
     _topLabelPainter.paint(
       canvas,
       _triangle.C -
-          Offset(
-            _topLabelPainter.width / 2,
-            _topLabelPainter.height + padding,
-          ),
+          Offset(_topLabelPainter.width / 2, _topLabelPainter.height + padding),
     );
-    if ([_leftLabelPainter.width, _rightLabelPainter.width]
-        .every((element) => element < _triangle.A.dx - padding * 2)) {
+    if ([
+      _leftLabelPainter.width,
+      _rightLabelPainter.width,
+    ].every((element) => element < _triangle.A.dx - padding * 2)) {
       _leftLabelPainter.paint(
         canvas,
         _triangle.A -
@@ -574,10 +579,7 @@ Map<T, Alignment> _getAlignments<T>(
   }
   final pointChildIds = data.swapKV;
   const half = 0.5;
-  const align2 = [
-    Alignment(half, 0),
-    Alignment(-half, 0),
-  ];
+  const align2 = [Alignment(half, 0), Alignment(-half, 0)];
   const align3 = [
     Alignment(half, 0.25),
     Alignment(-half, 0.25),
@@ -589,36 +591,33 @@ Map<T, Alignment> _getAlignments<T>(
     Alignment(half, 0.25),
     Alignment(-half, 0.25),
   ];
-  return pointChildIds.entries.fold(
-    <T, Alignment>{},
-    (previousValue, element) {
-      final MapEntry(key: point, value: childIds) = element;
-      if (childIds.length <= 1) {
-        return previousValue;
-      }
-
-      switch (childIds) {
-        case [final child1, final child2]:
-          previousValue[child1] = align2[0];
-          previousValue[child2] = align2[1];
-        case [final child1, final child2, final child3]:
-          previousValue[child1] = align3[0];
-          previousValue[child2] = align3[1];
-          previousValue[child3] = align3[2];
-        default:
-          for (final (i, childId) in childIds.indexed) {
-            previousValue[childId] = alignMore[i % alignMore.length];
-          }
-          return previousValue;
-      }
+  return pointChildIds.entries.fold(<T, Alignment>{}, (previousValue, element) {
+    final MapEntry(key: point, value: childIds) = element;
+    if (childIds.length <= 1) {
       return previousValue;
-    },
-  );
+    }
+
+    switch (childIds) {
+      case [final child1, final child2]:
+        previousValue[child1] = align2[0];
+        previousValue[child2] = align2[1];
+      case [final child1, final child2, final child3]:
+        previousValue[child1] = align3[0];
+        previousValue[child2] = align3[1];
+        previousValue[child3] = align3[2];
+      default:
+        for (final (i, childId) in childIds.indexed) {
+          previousValue[childId] = alignMore[i % alignMore.length];
+        }
+        return previousValue;
+    }
+    return previousValue;
+  });
 }
 
 Color _getColorForBrightness(Brightness brightness) {
   return switch (brightness) {
     Brightness.dark => const Color(0xFFFFFFFF),
-    Brightness.light => const Color(0xFF000000)
+    Brightness.light => const Color(0xFF000000),
   };
 }
