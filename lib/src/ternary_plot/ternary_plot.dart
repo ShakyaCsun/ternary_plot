@@ -570,6 +570,8 @@ class RenderTernaryPlot<T> extends RenderBox
   }
 }
 
+final _cachedAlignments = <(int, int), Alignment>{};
+
 Map<T, Alignment> _getAlignments<T>(
   Map<T, TernaryPoint> data,
   bool offsetChildren,
@@ -578,38 +580,25 @@ Map<T, Alignment> _getAlignments<T>(
     return {};
   }
   final pointChildIds = data.swapKV;
-  const half = 0.5;
-  const align2 = [Alignment(half, 0), Alignment(-half, 0)];
-  const align3 = [
-    Alignment(half, 0.25),
-    Alignment(-half, 0.25),
-    Alignment(0, -0.25),
-  ];
-  const alignMore = [
-    Alignment.center,
-    Alignment(0, -0.25),
-    Alignment(half, 0.25),
-    Alignment(-half, 0.25),
-  ];
   return pointChildIds.entries.fold(<T, Alignment>{}, (previousValue, element) {
     final MapEntry(key: point, value: childIds) = element;
-    if (childIds.length <= 1) {
+
+    final n = childIds.length;
+
+    if (n <= 1) {
       return previousValue;
     }
 
-    switch (childIds) {
-      case [final child1, final child2]:
-        previousValue[child1] = align2[0];
-        previousValue[child2] = align2[1];
-      case [final child1, final child2, final child3]:
-        previousValue[child1] = align3[0];
-        previousValue[child2] = align3[1];
-        previousValue[child3] = align3[2];
-      default:
-        for (final (i, childId) in childIds.indexed) {
-          previousValue[childId] = alignMore[i % alignMore.length];
-        }
-        return previousValue;
+    for (final (index, childId) in childIds.indexed) {
+      final cacheKey = (n, index);
+      if (!_cachedAlignments.containsKey(cacheKey)) {
+        final radius = n > 4 ? 0.9 : 0.65;
+        final theta = 2 * pi * index / n;
+        final x = radius * cos(theta);
+        final y = radius * sin(theta);
+        _cachedAlignments[cacheKey] = Alignment(x, y);
+      }
+      previousValue[childId] = _cachedAlignments[cacheKey]!;
     }
     return previousValue;
   });
