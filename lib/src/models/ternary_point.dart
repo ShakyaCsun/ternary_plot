@@ -8,7 +8,8 @@ class TernaryPoint extends Equatable implements Comparable<TernaryPoint> {
         a >= 0 && b >= 0 && c >= 0,
         'All points in TernaryPoint must be positive',
       ),
-      total = a + b + c;
+      // https://en.wikipedia.org/wiki/Ternary_plot
+      xyPoint = (0.5 * (2 * b + c) / (a + b + c), sqrt_3by2 * c / (a + b + c));
 
   /// Bottom Left
   ///
@@ -25,12 +26,7 @@ class TernaryPoint extends Equatable implements Comparable<TernaryPoint> {
   /// If c = total, this translates to (x, y) = (0.5, sqrt(3)/2)
   final double c;
 
-  final double total;
-
-  (double x, double y) get xyPoint {
-    // https://en.wikipedia.org/wiki/Ternary_plot
-    return (0.5 * (2 * b + c) / total, sqrt_3by2 * c / total);
-  }
+  final (double x, double y) xyPoint;
 
   /// Corrected cartesian point for Flutter world where (0, 0) is top left
   /// and (1, 1) is bottom right
