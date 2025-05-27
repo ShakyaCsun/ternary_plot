@@ -6,7 +6,7 @@ import 'package:ternary_plot/src/models/models.dart';
 const sqrt_3 = 1.7320508075688772;
 
 /// Square root of 3, divided by 2
-const sqrt_3by2 = sqrt_3 / 2;
+const double sqrt_3by2 = sqrt_3 / 2;
 
 class EquilateralTriangle extends Equatable {
   EquilateralTriangle({required this.padding, required this.availableSize});

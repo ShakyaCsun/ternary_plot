@@ -381,10 +381,9 @@ class RenderTernaryPlot<T> extends RenderBox
       :ternaryLabels,
     ) = settings;
 
-    final canvas =
-        context.canvas
-          ..save()
-          ..translate(offset.dx, offset.dy);
+    final canvas = context.canvas
+      ..save()
+      ..translate(offset.dx, offset.dy);
 
     // Doesn't actually paint labels if size doesn't allow or
     // if there are no labels
@@ -404,13 +403,9 @@ class RenderTernaryPlot<T> extends RenderBox
 
       if (title != null) {
         final rect = areaPath.getBounds();
-        final offset =
-            titlePosition != null
-                ? triangle.correctedPosition(point: titlePosition)
-                : Offset(
-                  rect.left + rect.width / 2,
-                  rect.top + rect.height / 2,
-                );
+        final offset = titlePosition != null
+            ? triangle.correctedPosition(point: titlePosition)
+            : Offset(rect.left + rect.width / 2, rect.top + rect.height / 2);
 
         final textPainter = TextPainter(
           text: TextSpan(
@@ -435,12 +430,10 @@ class RenderTernaryPlot<T> extends RenderBox
     }
 
     if (gridLines > 0) {
-      final gridLinePaint =
-          Paint()
-            ..color =
-                gridLineColor ??
-                (lineColor ?? Colors.white).withValues(alpha: 0.4)
-            ..style = PaintingStyle.stroke;
+      final gridLinePaint = Paint()
+        ..color =
+            gridLineColor ?? (lineColor ?? Colors.white).withValues(alpha: 0.4)
+        ..style = PaintingStyle.stroke;
 
       for (var i = 0; i < gridLines; i++) {
         final one = i.toDouble();
@@ -460,11 +453,10 @@ class RenderTernaryPlot<T> extends RenderBox
     }
 
     if (lineColor != null) {
-      final linePaint =
-          Paint()
-            ..color = lineColor
-            ..strokeWidth = 2
-            ..style = PaintingStyle.stroke;
+      final linePaint = Paint()
+        ..color = lineColor
+        ..strokeWidth = 2
+        ..style = PaintingStyle.stroke;
       canvas.drawPath(triangle.path, linePaint);
     }
 
