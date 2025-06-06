@@ -3,5 +3,6 @@ library;
 
 export 'src/models/models.dart';
 export 'src/ternary_plot/ternary_plot.dart';
+export 'src/ternary_plot/ternary_plot_area.dart';
 export 'src/ternary_plot/ternary_plot_data.dart';
 export 'src/ternary_plot/ternary_plot_settings.dart';

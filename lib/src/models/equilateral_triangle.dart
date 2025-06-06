@@ -77,9 +77,7 @@ class EquilateralTriangle extends Equatable {
     }
     final Offset(dx: x, dy: y) = correctedPosition(point: points[0]);
     if (pointsCount == 1) {
-      return Path()
-        ..moveTo(x, y)
-        ..addOval(Rect.fromCircle(center: Offset.zero, radius: 1));
+      return Path()..addOval(Rect.fromCircle(center: Offset(x, y), radius: 4));
     }
     final areaPath = Path()..moveTo(x, y);
     for (final point in points.skip(1)) {

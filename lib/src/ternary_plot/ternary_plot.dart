@@ -390,43 +390,7 @@ class RenderTernaryPlot<T> extends RenderBox
     paintLabels(canvas, minPadding);
 
     for (final area in _areas ?? <TernaryPlotArea>[]) {
-      final TernaryPlotArea(
-        :points,
-        :color,
-        :title,
-        :titleStyle,
-        :titlePosition,
-      ) = area;
-      final areaPaint = Paint()..color = color;
-      final areaPath = triangle.getAreaPath(points: points);
-      canvas.drawPath(areaPath, areaPaint);
-
-      if (title != null) {
-        final rect = areaPath.getBounds();
-        final offset = titlePosition != null
-            ? triangle.correctedPosition(point: titlePosition)
-            : Offset(rect.left + rect.width / 2, rect.top + rect.height / 2);
-
-        final textPainter = TextPainter(
-          text: TextSpan(
-            text: title,
-            style:
-                titleStyle ??
-                defaultAreaTitleStyle.copyWith(
-                  color: _getColorForBrightness(
-                    ThemeData.estimateBrightnessForColor(color),
-                  ),
-                ),
-          ),
-          textDirection: textDirection,
-          textAlign: TextAlign.center,
-        )..layout();
-        final textPosition =
-            offset - Offset(textPainter.width / 2, textPainter.height / 2);
-        textPainter
-          ..paint(canvas, textPosition)
-          ..dispose();
-      }
+      area.paint(canvas, triangle, defaultAreaTitleStyle, textDirection);
     }
 
     if (gridLines > 0) {
