@@ -92,6 +92,8 @@ class RenderTernaryPlot<T> extends RenderBox
        _areas = areas,
        _onPointTap = onPointTap,
        _onPointHovered = onPointHovered {
+    _tapGestureRecognizer = TapGestureRecognizer(debugOwner: this)
+      ..onTap = _onTap;
     _hoveredPoints.addListener(_hoveredPointCallback);
   }
 
@@ -271,13 +273,6 @@ class RenderTernaryPlot<T> extends RenderBox
   );
 
   late final TapGestureRecognizer _tapGestureRecognizer;
-
-  @override
-  void attach(PipelineOwner owner) {
-    super.attach(owner);
-    _tapGestureRecognizer = TapGestureRecognizer(debugOwner: this)
-      ..onTap = _onTap;
-  }
 
   @override
   void setupParentData(covariant RenderObject child) {
